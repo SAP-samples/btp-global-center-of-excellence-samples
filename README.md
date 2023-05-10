@@ -1,13 +1,13 @@
 # Samples from the Global Center of Excellence for BTP
 
 ## Description
-Repoistory to share samples with customers and partners.
+Repository to share samples with customers and partners.
 
 ## Requirements
 You require your own infrastructure to run the examples.
 
 ## Download and Installation
-Detail on using the material is given in the individual sub-repositories.
+Details on using the material is given in the different sub folders.
 
 ## Known Issues
 No known issues. 
