@@ -2,9 +2,9 @@
 
 ## Description
 Extend SAC Planning with custom calculations or Machine Learning.
-<BR>The files in this folder belong to a corresponding blog series, please see
-<BR>TODO
-<BR>This content is part of the samples from the Global Center of Excellence for BTP.
+<br />The files in this folder belong to a corresponding blog series, please see
+<br />TODO
+<br />This content is part of the samples from the Global Center of Excellence for BTP.
 
 ## Requirements
 You require your own infrastructure to run the examples.
