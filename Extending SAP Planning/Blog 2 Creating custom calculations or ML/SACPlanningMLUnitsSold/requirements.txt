@@ -1,4 +1,0 @@
-Flask
-hana-ml==2.15.23011100
-shapely
-IPython
