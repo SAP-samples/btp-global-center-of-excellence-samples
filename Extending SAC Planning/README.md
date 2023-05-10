@@ -8,6 +8,9 @@ Extend SAC Planning with custom calculations or Machine Learning.
 
 ## Requirements
 You require your own infrastructure to run the examples.
+- SAC Planning
+- SAP Datasphere
+- Cloud Foundry
 
 ## Download and Installation
 Please follow the instructions given in the blog series mentioned above.
