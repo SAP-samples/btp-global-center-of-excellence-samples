@@ -1,10 +1,12 @@
 # Samples from the Global Center of Excellence for BTP
 
 ## Description
-Repository to share samples with customers and partners.
+Repository from the Global Center of Excellence for BTP to provide the files that are needed to follow our blogs on https://blogs.sap.com/
+For each blog or each blog series the content is collected in a separate folder whithin this repository.
 
 ## Requirements
-You require your own infrastructure to run the examples.
+There are no general requirements. For each sample there might be different infrastructure or software required to run the code. 
+Those requirements are detailed in each individual sample's folder.
 
 ## Download and Installation
 Details on using the material is given in the different sub folders.
