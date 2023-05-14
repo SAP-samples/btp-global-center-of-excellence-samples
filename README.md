@@ -1,4 +1,5 @@
 # Samples from the Global Center of Excellence for BTP
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/btp-global-center-of-excellence-samples)](https://api.reuse.software/info/github.com/SAP-samples/btp-global-center-of-excellence-samples)
 
 ## Description
 Repository from the Global Center of Excellence for BTP to provide the files that are needed to follow our blogs on https://blogs.sap.com/
@@ -21,5 +22,3 @@ For additional support you can contact the SAP colleagues that have contributed 
 
 ## License
 Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved. This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
-
-[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/btp-global-center-of-excellence-samples)](https://api.reuse.software/info/github.com/SAP-samples/btp-global-center-of-excellence-samples)
