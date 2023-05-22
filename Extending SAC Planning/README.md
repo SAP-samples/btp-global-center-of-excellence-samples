@@ -7,6 +7,8 @@ Extend SAC Planning with custom calculations or Machine Learning.
 [Extending SAC Planning – Acessing planning data with SAP Datasphere](https://blogs.sap.com/2023/05/17/extending-sac-planning-acessing-planning-data-with-sap-datasphere/)
 <br>
 [Extending SAC Planning – Creating custom calculations or ML](https://blogs.sap.com/?p=1739029&preview=true&preview_id=1739029)
+<br>
+Extending SAC Planning - Orchestrating the end-to-end business process
 
 
 ## Requirements
