@@ -2,7 +2,10 @@
 
 ## Description
 Extend SAC Planning with custom calculations or Machine Learning.
-<br />The files in this folder belong to the blog series [Extending SAC Planning](https://blogs.sap.com/2023/05/17/extending-sac-planning-acessing-planning-data-with-sap-datasphere/), which is a sample from the Global Center of Excellence for BTP.
+<br />The files in this folder belong to the blog series "Extending SAC Planning", which is a sample from the Global Center of Excellence for BTP.
+<ul>
+</li>[Extending SAC Planning – Acessing planning data with SAP Datasphere](https://blogs.sap.com/2023/05/17/extending-sac-planning-acessing-planning-data-with-sap-datasphere/)</li>
+</ul>
 
 ## Requirements
 You require your own infrastructure to run the examples.
