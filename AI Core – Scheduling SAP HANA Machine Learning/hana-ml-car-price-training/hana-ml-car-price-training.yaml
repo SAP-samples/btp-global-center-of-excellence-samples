@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: hana-ml-car-price-training # Executable ID (max length 64 lowercase-hyphen-separated), please modify this to any value if you are not the only user of your SAP AI Core instance. Example: `first-pipeline-1234`
+  annotations:
+    scenarios.ai.sap.com/name: "HANA ML Car Price"
+    scenarios.ai.sap.com/description: "Estimate the price of a use car with SAP HANA Machine Learning"
+    executables.ai.sap.com/name: "HANA ML Car Price - Training Workflow"
+    executables.ai.sap.com/description: "Train the model in SAP HANA"
+  labels:
+    scenarios.ai.sap.com/id: "hana-ml-car-price" # The scenario ID to which the serving template belongs
+    ai.sap.com/version: "0.0.1"
+spec:
+  imagePullSecrets:
+    - name: docker-registry-secret-XYZ # your docker registry secret
+  entrypoint: mypipeline
+  templates:
+  - name: mypipeline
+    container:
+      image: docker.io/YOURUSERHERE/hana-ml-car-price-training:01 # Your docker image name
+      command: ["/bin/sh", "-c"]
+      args:
+        - "python /app/src/main.py"
+      env:
+      - name: HANA_ADDRESS # Name of the environment variable that will be available in the image
+        valueFrom:
+          secretKeyRef:
+            name: hanacred  # Name of the generic secret created in SAP AI Core for the Resource Group
+            key: address    # Name of the key from the JSON string that is saved as generic secret    
+      - name: HANA_PORT 
+        valueFrom:
+          secretKeyRef:
+            name: hanacred   
+            key: port    
+      - name: HANA_USER 
+        valueFrom:
+          secretKeyRef:
+            name: hanacred   
+            key: user   
+      - name: HANA_PASSWORD 
+        valueFrom:
+          secretKeyRef:
+            name: hanacred   
+            key: password   
