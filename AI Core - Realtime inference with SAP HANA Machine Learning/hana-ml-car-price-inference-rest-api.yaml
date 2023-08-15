@@ -23,12 +23,12 @@ spec:
     spec: |
        predictor:
          imagePullSecrets:
-         - name: docker-registry-secret-i056450   # your docker registry secret
+         - name: docker-registry-secret-XYZ   # your docker registry secret
          minReplicas: 1
          maxReplicas: 2    # how much to scale
          containers:
          - name: kserve-container
-           image: docker.io/andreasforstersap/hana-ml-car-price-restapi-inference:01 # Your docker image name
+           image: docker.io/YOURUSERHERE/hana-ml-car-price-restapi-inference:01 # Your docker image name
            ports:
              - containerPort: 9001    # customizable port
                protocol: TCP   
