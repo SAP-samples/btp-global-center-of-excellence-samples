@@ -1,0 +1,8 @@
+Flask==2.0.1
+hana_ml==2.17.23071400
+shapely==1.8.0
+jinja2==3.1.2
+urllib3==1.26.16
+requests==2.29.0
+cryptography==39.0.1
+IPython==8.14.0
