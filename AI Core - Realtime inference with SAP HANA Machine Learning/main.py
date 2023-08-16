@@ -30,11 +30,6 @@ app = Flask(__name__)
 # You may customize the endpoint, but must have the prefix `/v<number>`
 @app.route("/v1/predict", methods=["POST"])
 def predict():
-    """
-    Perform an inference on the model created in initialize
-    Returns:
-        String value price.
-    """
     print("start serving ...")
 
     # Convert incoming payload to Pandas DataFrame
