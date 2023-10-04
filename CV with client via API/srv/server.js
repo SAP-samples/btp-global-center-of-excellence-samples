@@ -1,6 +1,6 @@
 const cds = require('@sap/cds');
 
-cds.on('served', () => {
+cds.once('served', () => {
     const client = process.env?.sap_client || null,
         user = cds.db?.options?.credentials?.user || null,
         dbkind = cds.db?.kind || null;

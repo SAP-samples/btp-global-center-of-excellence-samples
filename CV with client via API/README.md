@@ -2,7 +2,7 @@
 
 This project shows how to implement a dynamic configuration of the `sap-client` in calculation views which are accessed via an HDI runtime user (RT user).
 
-Link to SAP Blog: 
+Link to SAP Blog: https://blogs.sap.com/2023/10/04/exposing-calculation-view-with-dynamic-client-via-odata-api/
 
 ## 1. Prerequisites (HANA Cloud Setup)
 
