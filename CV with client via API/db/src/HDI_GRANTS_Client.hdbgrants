@@ -1,0 +1,22 @@
+{
+    "HDI_GRANTS_Client": {
+        "object_owner": {
+            "object_privileges": [
+                {
+                    "schema": "SYS",
+                    "name": "DUMMY",
+                    "privileges": [
+                        "SELECT"
+                    ]
+                }
+            ],
+            "roles": [
+                {
+                    "roles": [
+                        "UG_GRANTOR_ROLE"
+                    ]
+                }
+            ]
+        }
+    }
+}

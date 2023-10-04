@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CALCVIEWS_SAPDATA" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="NONE" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" defaultClient="$$client$$">
+<descriptions defaultDescription="CALCVIEWS_SAPDATA"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="SAP_DATA" clientColumn="MANDT">
+    <resourceUri>SAP_DATA</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="VALUE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="SAP_DATA"/></calculationView>
+</calculationViews>
+
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MANDT"/>
+    </attribute>
+    <attribute id="ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="VALUE" order="3" aggregationType="sum" measureType="simple" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="VALUE"/>
+      <measureMapping columnObjectName="Projection_1" columnName="VALUE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="196"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

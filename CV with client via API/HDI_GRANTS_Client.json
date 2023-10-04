@@ -1,0 +1,7 @@
+{
+    "user": "UG_GRANTOR_USER",
+    "password": "YourSecretPassword",
+    "tags": [
+        "password"
+    ]
+}
