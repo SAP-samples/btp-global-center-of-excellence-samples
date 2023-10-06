@@ -4,6 +4,9 @@ This project shows how to implement a dynamic configuration of the `sap-client` 
 
 Link to SAP Blog: https://blogs.sap.com/2023/10/04/exposing-calculation-view-with-dynamic-client-via-odata-api/
 
+![flow](https://github.com/SAP-samples/btp-global-center-of-excellence-samples/assets/19388646/5aed29b0-d98e-4437-9788-6061222f63a2)
+
+
 ## 1. Prerequisites (HANA Cloud Setup)
 
 Use the SAP HANA Database Explorer to log in to your HANA Cloud database using the `DBADMIN` user.
