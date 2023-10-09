@@ -1,0 +1,12 @@
+{
+  "role": {
+    "name": "DWC_CONSUMPTION_ROLE",
+    "schema_privileges": [
+      {
+        "privileges": [
+          "SELECT"
+        ]
+      }
+    ]
+  }
+}

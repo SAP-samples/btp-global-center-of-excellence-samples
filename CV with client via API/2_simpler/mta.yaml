@@ -1,0 +1,75 @@
+_schema-version: '3.1'
+ID: calcview_client
+version: 1.0.0
+description: 'A simple CAP project.'
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx cds build --production
+modules:
+  - name: calcview_client-srv
+    type: nodejs
+    path: gen/srv
+    properties:
+      sap_client: '' # empty value when no mta-ext is used
+    parameters:
+      memory: 256M 
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: calcview_client-db
+      - name: calcview_client-auth
+
+  - name: calcview_client-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      memory: 256M 
+      buildpack: nodejs_buildpack
+      route: no-route
+    requires:
+      - name: calcview_client-db
+
+  - name: calcview_client-app
+    type: approuter.nodejs
+    path: app/
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: calcview_client-auth
+
+resources:
+  - name: calcview_client-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+      config:
+        database_id: c71cde07-f86a-4258-b92a-55aff26c9044 # the ID of your (DSP) HC database
+        schema: CALCVIEW_CLIENT_DEMO
+
+  - name: calcview_client-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: calcview_client-${org}-${space}
+        tenant-mode: dedicated

@@ -1,0 +1,17 @@
+{
+    "format_version": 1,
+    "imports": [
+        {
+            "target_table": "SAP_DATA",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "SAP_DATA.csv",
+                "has_header": true,
+                "dialect": "HANA",
+                "type_config": {
+                    "delimiter": ";"
+                }
+            }
+        }
+    ]
+}

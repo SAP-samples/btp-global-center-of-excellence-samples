@@ -1,0 +1,6 @@
+COLUMN TABLE "SAP_DATA" (
+    "MANDT" NVARCHAR(3),
+    "ID" INT,
+    "VALUE" INT,
+    PRIMARY KEY ("MANDT","ID")
+)
