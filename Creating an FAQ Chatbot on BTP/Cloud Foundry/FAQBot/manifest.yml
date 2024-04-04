@@ -1,0 +1,5 @@
+---
+applications:
+- name: faqbot
+  memory: 512M
+  command: streamlit run faqbot.py --server.port ${PORT}

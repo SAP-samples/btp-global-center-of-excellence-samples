@@ -1,0 +1,7 @@
+openai
+streamlit
+streamlit_chat
+hana_ml
+shapely
+generative-ai-hub-sdk
+bs4
