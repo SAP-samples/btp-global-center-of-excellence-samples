@@ -1,0 +1,58 @@
+{
+  "definitions": {
+    "LV_PERIOD_MAPPING": {
+      "kind": "entity",
+      "elements": {
+        "F_YEAR": {
+          "@EndUserText.label": "fYear",
+          "type": "cds.Integer"
+        },
+        "F_PERIOD": {
+          "@EndUserText.label": "fPeriod",
+          "type": "cds.Integer"
+        },
+        "F_YEAR_MAPPED": {
+          "@EndUserText.label": "fYearMapped",
+          "type": "cds.Integer"
+        },
+        "F_PERIOD_MAPPED": {
+          "@EndUserText.label": "fPeriodMapped",
+          "type": "cds.Integer"
+        },
+        "F_PERIOD_YTD": {
+          "@EndUserText.label": "fPeriodYTD",
+          "type": "cds.String",
+          "length": 100
+        },
+        "DIFF": {
+          "@EndUserText.label": "diff",
+          "type": "cds.Integer"
+        }
+      },
+      "@EndUserText.label": "LV Period Mapping",
+      "@ObjectModel.modelingPattern": {
+        "#": "DATA_STRUCTURE"
+      },
+      "@ObjectModel.supportedCapabilities": [
+        {
+          "#": "DATA_STRUCTURE"
+        }
+      ],
+      "@Analytics.dbViewType": "TABLE_FUNCTION",
+      "@DataWarehouse.consumption.external": false,
+      "@DataWarehouse.tableFunction.script": "\tdeclare lv_f_year_start integer;\n\tdeclare lv_f_period_start integer;\n\tdeclare lv_no_f_periods_per_f_year integer;\n\tdeclare lv_no_f_years_to_generate integer;\n\n\tdeclare i_f_year integer;\n\tdeclare i_f_period integer;\n\tdeclare i_f_period_diff integer;\n\tdeclare lv_f_year_mapped integer;\n\tdeclare lv_f_period_mapped integer;\n\tdeclare lv_f_period_ytd nvarchar(100);\n\n\tdeclare lt_f_period_mapping table (F_YEAR integer, F_PERIOD integer, F_YEAR_MAPPED integer, F_PERIOD_MAPPED integer, F_PERIOD_YTD nvarchar(100), DIFF integer);\n\n\t/* parameters to set for generation */\n\tlv_f_year_start = 2020;\n\tlv_no_f_periods_per_f_year = 12;\n\tlv_no_f_years_to_generate = 5;\n\n\tfor i_f_year in :lv_f_year_start .. :lv_f_year_start + :lv_no_f_years_to_generate do\n\t\tfor i_f_period in 1 .. :lv_no_f_periods_per_f_year do\n\t\t\tfor i_f_period_diff in 0 .. :lv_no_f_periods_per_f_year do\n\t\t\t\tlv_f_period_mapped = :i_f_period - :i_f_period_diff;\n\t\t\t\tif :i_f_period_diff = 0 then lv_f_period_ytd = 'PRINCIPAL'; else lv_f_period_ytd = 'SUM'; end if;\n\t\t\t\tif :lv_f_period_mapped <= 0 then \n\t\t\t\t\tlv_f_year_mapped = i_f_year - 1;\n\t\t\t\t\tlv_f_period_mapped = lv_f_period_mapped+12;\n\t\t\t\t\tlv_f_period_ytd = 'EXCLUDE';\n\t\t\t\t\telse lv_f_year_mapped = i_f_year;\n\t\t\t\tend if;\n\t\t\t\tinsert into :lt_f_period_mapping values (:i_f_year, :i_f_period, :lv_f_year_mapped, :lv_f_period_mapped, :lv_f_period_ytd, :i_f_period_diff);\n\t\t\tend for;\n\t\tend for;\n\tend for;\n\n\treturn select F_YEAR, F_PERIOD, F_YEAR_MAPPED, F_PERIOD_MAPPED, F_PERIOD_YTD, DIFF from :lt_f_period_mapping;\n",
+      "_meta": {
+        "dependencies": {
+          "folderAssignment": null
+        }
+      }
+    }
+  },
+  "version": {
+    "csn": "1.0"
+  },
+  "meta": {
+    "creator": "CDS Compiler v1.19.2"
+  },
+  "$version": "1.0"
+}
