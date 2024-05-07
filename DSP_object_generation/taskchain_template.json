@@ -1,0 +1,54 @@
+{
+  "taskchains": {
+    "TC_TECHNICAL_NAME": {
+      "kind": "sap.dwc.taskChain",
+      "@EndUserText.label": "DESCRIPTION",
+      "nodes": [
+        {
+          "id": 0,
+          "type": "START"
+        },
+        {
+          "id": 1,
+          "type": "TASK",
+          "taskIdentifier": {
+            "applicationId": "TRANSFORMATION_FLOWS",
+            "activity": "EXECUTE",
+            "objectId": "TF1_TECHNICAL_NAME"
+          }
+        },
+        {
+          "id": 2,
+          "type": "TASK",
+          "taskIdentifier": {
+            "applicationId": "TRANSFORMATION_FLOWS",
+            "activity": "EXECUTE",
+            "objectId": "TF2_TECHNICAL_NAME"
+          }
+        }
+      ],
+      "links": [
+        {
+          "startNode": {
+            "nodeId": 0,
+            "statusRequired": "ANY"
+          },
+          "endNode": {
+            "nodeId": 1
+          },
+          "id": 0
+        },
+        {
+          "startNode": {
+            "nodeId": 1,
+            "statusRequired": "COMPLETED"
+          },
+          "endNode": {
+            "nodeId": 2
+          },
+          "id": 1
+        }
+      ]
+    }
+  }
+}

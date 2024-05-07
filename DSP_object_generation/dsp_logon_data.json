@@ -1,0 +1,11 @@
+{
+  "client_id": "something",
+  "client_secret": "something",
+  "authorization_url": "https://something/oauth/authorize",
+  "token_url": "https://something.hana.ondemand.com/oauth/token",
+  "dsp_host": "https://something.cloud.sap/",
+  "hdb_address": "something.hanacloud.ondemand.com",
+  "hdb_port": 443,
+  "hdb_user": "something",
+  "hdb_password": "something"
+}
