@@ -27,9 +27,9 @@ spec:
                   type: my-virtualenv-volume
               spec:
                 accessModes: [ "ReadWriteOnce" ]
-                #specifically for azure, we choose a cheaper storage tier
+                #specifically for azure, choose "managed-standard-hdd" for a cheaper storage tier
                 #otherwise, use "default"
-                storageClassName: "managed-standard-hdd"
+                storageClassName: "default"
                 resources:
                   requests:
                     storage: 1Gi
@@ -60,7 +60,7 @@ spec:
             value: "1"
 # - - - - - - - - - - - - - - - - - - - - - - -             
       containers:
-      - image: #YOUR_REGISTRY#/dockerblog:latest
+      - image: #IMG_NAME#
         imagePullPolicy: IfNotPresent #because we use a specific version, not 'latest'.
         name: my-supper-app
         ports:

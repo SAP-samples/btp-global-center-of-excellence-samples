@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # current date in the format: 2024-05-23.09H10
-TAG_DATE=$(date +%Y-%m-%d.%HH%M)
+export TAG_DATE=$(date +%Y-%m-%d.%HH%M)
 
 # detect if an external image registry is configured
 if [ "z${IMGREGISTRY}z" = "zz" ]; then
@@ -10,11 +10,13 @@ if [ "z${IMGREGISTRY}z" = "zz" ]; then
     PUBLISH=0
 else
     REGISTRY_TAG="-t ${IMGREGISTRY}/dockerblog:${TAG_DATE}"
+    IMG_NAME="${IMGREGISTRY}/dockerblog:${TAG_DATE}"
+    echo "Image name is ${IMGREGISTRY}/dockerblog:${TAG_DATE}"
     PUBLISH=1
 fi
 
 
-docker build -t dockerblog:$TAG_DATE \
+docker build -t dockerblog:${TAG_DATE} \
              -t dockerblog:latest \
              $REGISTRY_TAG \
     --label "builton=$(hostname)" \
@@ -33,8 +35,9 @@ if [ $BUILD_CODE -eq 0 ] ; then
         echo publishing image to $IMGREGISTRY
         docker push ${IMGREGISTRY}/dockerblog:${TAG_DATE} 
         echo 
+        sed -e "s|#IMG_NAME#|${IMG_NAME}|" template.deployment.yaml > deployment.yaml
         echo "To update your running deployment, execute"
-        echo kubectl -n dockerblog set image deployment/dummydep my-supper-app=${IMGREGISTRY}/dockerblog:${TAG_DATE}
+        echo kubectl -n dockerblog apply -f deployment.yaml
     fi
 else
     echo !! Image build failed !!

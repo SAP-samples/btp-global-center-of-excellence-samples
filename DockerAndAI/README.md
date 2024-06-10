@@ -236,7 +236,7 @@ The line that matters is the “docker build …” command, the rest is for pri
 #!/bin/sh
 
 # current date in the format: 2024-05-23.09H10
-TAG_DATE=$(date +%Y-%m-%d.%HH%M)
+export TAG_DATE=$(date +%Y-%m-%d.%HH%M)
 
 # detect if an external image registry is configured
 if [ "z${IMGREGISTRY}z" = "zz" ]; then
@@ -245,11 +245,12 @@ if [ "z${IMGREGISTRY}z" = "zz" ]; then
     PUBLISH=0
 else
     REGISTRY_TAG="-t ${IMGREGISTRY}/dockerblog:${TAG_DATE}"
+    echo "Image name is ${IMGREGISTRY}/dockerblog:${TAG_DATE}"
     PUBLISH=1
 fi
 
 
-docker build -t dockerblog:$TAG_DATE \
+docker build -t dockerblog:${TAG_DATE} \
              -t dockerblog:latest \
              $REGISTRY_TAG \
     --label "builton=$(hostname)" \
@@ -278,6 +279,7 @@ else
     awk '{ print "\t" $0 }' build.log
     echo " - - - - - - - - - - - - - "
 fi
+
 
 ```
 
@@ -311,21 +313,31 @@ export IMGREGISTRY=...
 docker login ... --username ... --password ...
 </pre>
 
-<p>
-<details>
 
-<summary>(Optional) Confirm permission to push to the image registry
-</summary>
+<p>
+
+<details>
+<summary>re-execute the build script to push the image to the registry</summary>
 
 ```
-docker push $IMGREGISTRY/python:3.12-slim
-The push refers to repository [your_img_registry/python]
-2eb7c5261c95: Mounted from dockerblog 
-a9435642a9e3: Mounted from dockerblog 
-b3232f6d8e2e: Mounted from dockerblog 
-146826fa3ca0: Mounted from dockerblog 
-5d4427064ecc: Mounted from dockerblog 
-3.12-slim: digest: sha256:fd3817f3a855f6c2ada16ac9468e5ee93e361005bd226fd5a5ee1a504e038c84 size: 1370
+
+./build.sh 
+Image name is your_registry/dockerblog:2024-06-10.17H18
+Image dockerblog:2024-06-10.17H18 size is 130MB
+publishing image to your_registry
+The push refers to repository [your_registry/dockerblog]
+5f70bf18a086: Layer already exists 
+b1ad2172fb37: Layer already exists 
+7bba65436694: Layer already exists 
+2eb7c5261c95: Layer already exists 
+a9435642a9e3: Layer already exists 
+b3232f6d8e2e: Layer already exists 
+146826fa3ca0: Layer already exists 
+5d4427064ecc: Layer already exists 
+2024-06-10.17H18: digest: sha256:67b23812dbf84c969fc85494d1568d202226614eb91bebf211bdd83ae1027052 size: 1991
+
+To update your running deployment, execute
+kubectl -n dockerblog set image deployment/dummydep my-supper-app=your_registry/dockerblog:2024-06-10.17H18
 
 ```
 
@@ -407,10 +419,15 @@ Ephemeral storage uses the exact same volumes as persistent storage, except the 
 ## Deploy and perform initial test
 ![deployment](./img/zoom.pod2.drawio.png)
 
-Replace #YOUR_REGISTRY# with your value in [`template.deployment.yaml`](./template.deployment.yaml)
+Re execute the build script [build.sh](./build.sh)
+Now that the registry is set with the environment variable `IMGREGISTRY`, 3 more steps will be performed:
+- the image will be tagged with the name of the external registry
+- the image will be pushed to the external registry
+- the image name will be set in the `deployment.yaml` according to the template file.
+
+
 There are tools to handle templates and specific values per environment but for now a simple string substitution would work. For instance this command performs the string replacement and creates another file.
-<pre>
-sed -e "s/#YOUR_REGISTRY#/$IMGREGISTRY/" template.deployment.yaml > deployment.yaml</pre>
+
 <details>
 <summary>template.deployment.yaml</summary>
 
@@ -477,7 +494,7 @@ spec:
             value: "1"
 # - - - - - - - - - - - - - - - - - - - - - - -             
       containers:
-      - image: #YOUR_REGISTRY#/dockerblog:latest
+      - image: #IMG_NAME#
         imagePullPolicy: IfNotPresent #because we use a specific version, not 'latest'.
         name: my-supper-app
         ports:
@@ -549,8 +566,9 @@ Finally, you can expose your app using a [service and decide how you’d like to
 <details>
 <summary>Basic service definition in yaml:</summary>
 
-[svc.yaml](./svc.yaml)
+`kubectl -n dockerblog apply -f svc.yaml`
 
+[svc.yaml](./svc.yaml)
 ```yaml
 apiVersion: v1
 kind: Service
@@ -570,6 +588,8 @@ To expose the service with SSL encryption you can use the Kyma APIRule
 
 <details>
 <summary>Sample api rule</summary>
+
+`kubectl -n dockerblog apply -f apirule.yaml`
 
 [apirule.yaml](./apirule.yaml)
 
