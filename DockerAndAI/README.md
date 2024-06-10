@@ -1,7 +1,7 @@
 <!-- title: Docker and AI -->
 <span style="font-size:2em;text-align:center;">Docker and AI</span>
 
-AI experiments once they produce the desired output are rarely "good to go". Fast prototyping to deliver the promises of AI is a challenge by itself, paying attention to future ease of maintenance and stability is understandibly a lesser priority.
+AI experiments once they produce the desired output are rarely "good to go". Fast prototyping to deliver the promises of AI is a challenge by itself, paying attention to future maintainability and stability is a lesser priority.
 The goal of this article is to present a few best practices that you could simply copy paste to your projects and avoid facing later operationalization issues. This mostly applies to containerized python application. 
 
 We have faced this many time, a mini application works on a laptop and is published to a hosted environment such as [SAP BTP, Kyma runtime](https://discovery-center.cloud.sap/serviceCatalog/kyma-runtime?tab=feature&region=all). Some issues occur during the migration, some during a routine security audit, others can occur weeks later. 
@@ -339,13 +339,16 @@ Finally, it is strongly recommended to have an editor with syntax highlithing fo
 ## Concepts
 To host your docker based application on Kubernetes, Here’s a quick recap of what you need to know:
 A kubernes cluster is a set of servers called nodes. For the BTP Kyma runtime, nodes are virtual machines whose size ranges from 8GB of RAM and 2 vcpu up to 256GB and 64 vcpu. 
+
 ![](./img/k8s.cluster.drawio.png)
 
 Pods are the most important concept, they represent the application and its running docker image. 
 ![pod](./img/kubernetes.pod.png)
+
 A pod is a logical envelope with at least one container. When configuration parameters and credentials are moved outside of the image, they can be stored as config maps and secrets. The external folder is to a PVC mounted inside the container as an external filesystem.
 Simple pods only have one container, more complex pods could have multiple containers.
 ![](./img/zoom.pod2.drawio.png)
+
 An artifact called “deployment” will define the pod and all of the surrounding artifacts displayed above.
 To segregate all these artifacts between application or tenants, isolation is implemented using namespaces.
 
@@ -403,6 +406,7 @@ Ephemeral storage uses the exact same volumes as persistent storage, except the 
 
 ## Deploy and perform initial test
 ![deployment](./img/zoom.pod2.drawio.png)
+
 Replace #YOUR_REGISTRY# with your value in [`template.deployment.yaml`](./template.deployment.yaml)
 There are tools to handle templates and specific values per environment but for now a simple string substitution would work. For instance this command performs the string replacement and creates another file.
 <pre>
