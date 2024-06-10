@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummydep
+spec:
+  replicas: 1 #scaling to multiple replicas is a distinct topic
+  selector:
+    matchLabels:
+      app: dummydep
+  strategy:
+    #Recreate: Terminate pods before starting new one. Consumes less resources but requires a small downtime
+    #RollingUpdate(default): start new pods, when ready terminate old ones.
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dummydep
+        #sidecar.istio.io/inject: "true"
+    spec:
+      volumes:
+        - name: virtualenv-volume
+# - - - Ephemeral volume - - - 
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                labels:
+                  type: my-virtualenv-volume
+              spec:
+                accessModes: [ "ReadWriteOnce" ]
+                #specifically for azure, we choose a cheaper storage tier
+                #otherwise, use "default"
+                storageClassName: "managed-standard-hdd"
+                resources:
+                  requests:
+                    storage: 1Gi
+        - name: pip-requirements
+          configMap: 
+            name: pip-reqs
+            items: 
+              - key: requirements.txt
+                path: requirements.txt
+      imagePullSecrets:
+        - name: mydockerregistry
+      initContainers:
+        - name: prepare-python-venv 
+          image: python:3.12-slim
+          command: ["sh", "-c", "python3 -m venv /venv/; /venv/bin/pip3 install --no-cache-dir -r /root/requirements.txt" ]
+          volumeMounts:
+          - name: virtualenv-volume
+            mountPath: /venv/
+          - name: pip-requirements
+            mountPath: /root/
+          resources: 
+            limits: # it takes some resources to download and uncompress libraries
+              memory: 350Mi
+              cpu: 1500m
+          env:
+            # skip the check and avoid a warning
+          - name: PIP_DISABLE_PIP_VERSION_CHECK
+            value: "1"
+# - - - - - - - - - - - - - - - - - - - - - - -             
+      containers:
+      - image: #YOUR_REGISTRY#/dockerblog:latest
+        imagePullPolicy: IfNotPresent #because we use a specific version, not 'latest'.
+        name: my-supper-app
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+          - name: virtualenv-volume
+            mountPath: /venv/
+            readOnly: true
+# CPU and memory resources are shared and pooled to minize costs.
+# Not all applications will peak at the same time so the total of all allocations is higher than the hardware capacity
+# To minimize the risks associated, it is highly recommended to reserve the correct amount of resources.
+        resources: 
+          limits: #limits = absolute maximum. If Above -> out of memory -> kill & restart
+            memory: 250Mi
+            cpu: 500m
+          requests: #actual consumption most of the time. If above, nothing happens.
+            memory: 150Mi
+            cpu: 200m
+        
+
