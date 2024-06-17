@@ -1,0 +1,21 @@
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  labels:
+    app.kubernetes.io/name: dummydep-apirule
+  name: dummydep-apirule
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  host: dummydep
+  rules:
+  - accessStrategies:
+    - handler: no_auth
+    methods:
+    - GET
+    - POST
+    path: /.*
+  service:
+    name: my-dummyapp-service
+    port: 5000
+
+
