@@ -1,0 +1,7 @@
+__pycache__
+dsp_logon_data.json
+objects_export/*
+!objects_export/.gitkeep
+objects_import/*
+!objects_import/.gitkeep
+other_untracked
