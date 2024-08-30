@@ -48,7 +48,7 @@ from dsp_rt_to_view_generation import r2v
 # -----------------------------------------------------------
 # Logout and login (optional, if not already logged in correctly)
 # -----------------------------------------------------------
-#du.logoutlogin(dsp_logon_data_file)
+du.logoutlogin(dsp_logon_data_file)
 
 # -----------------------------------------------------------
 # Run RT 2 View generation
@@ -59,6 +59,7 @@ from dsp_rt_to_view_generation import r2v
 # <SCHEMA_NAME>: Schema to read the existing remote tables from and write the generated view to
 # Objects_export_path: Path where the generated objects will be exported
 r2v = r2v(dsp_logon_data_file, 'SEFANGENERATESTUFF', objects_export_path)
+r2v.loopAndGo()
 
 # -----------------------------------------------------------
 # Partition a transformation flow
@@ -72,7 +73,7 @@ r2v = r2v(dsp_logon_data_file, 'SEFANGENERATESTUFF', objects_export_path)
 # Objects_export_path: Path where the existing transformation flow will be written to before partitioning
 # -----------------------------------------------------------
 
-tf_data = dtf.read_tf('SEFANGENERATESTUFF', 'UC2_TF', objects_import_path)
+# tf_data = dtf.read_tf('SEFANGENERATESTUFF', 'UC2_TF', objects_import_path)
 
 # -----------------------------------------------------------
 # Generate partitioned transformation flows and task chain
@@ -94,4 +95,4 @@ partitions = [
     ('25','30'),
     ('30','35')
 ]
-dtf.partition_tf(tf_data, 'SOMESTRING', partitions, objects_export_path, 'SEFANGENERATESTUFF')
+# dtf.partition_tf(tf_data, 'SOMESTRING', partitions, objects_export_path, 'SEFANGENERATESTUFF')
