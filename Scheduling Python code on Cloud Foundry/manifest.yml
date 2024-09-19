@@ -1,0 +1,6 @@
+---
+applications:
+- name: hana_ml_credstore
+  memory: 128MB
+  command: python hana_ml_credstore.py
+  random-route: true
