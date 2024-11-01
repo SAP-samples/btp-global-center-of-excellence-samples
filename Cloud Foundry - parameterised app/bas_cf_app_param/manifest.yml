@@ -1,0 +1,8 @@
+---
+applications:
+- name: bas_cf_app_param
+  memory: 512M
+  command: python bas_cf_app_param.py
+  services:
+    - xsuaaforsimplejobs
+    - jobschedulerinstance
