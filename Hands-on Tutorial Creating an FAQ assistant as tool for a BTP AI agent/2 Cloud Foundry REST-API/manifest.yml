@@ -1,0 +1,15 @@
+---
+  applications:
+  - name: faq
+    disk_quota: 2G
+    memory: 256M
+    buildpacks:
+    - https://github.com/cloudfoundry/python-buildpack.git
+    command: python faq.py
+    random-route: false
+    env:
+      AICORE_BASE_URL: 
+      AICORE_CLIENT_ID: 
+      AICORE_CLIENT_SECRET: 
+      AICORE_AUTH_URL: 
+      AICORE_RESOURCE_GROUP: 

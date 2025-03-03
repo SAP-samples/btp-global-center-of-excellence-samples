@@ -1,0 +1,3 @@
+Flask
+hana-ml==2.23.25010300
+generative-ai-hub-sdk[all]
