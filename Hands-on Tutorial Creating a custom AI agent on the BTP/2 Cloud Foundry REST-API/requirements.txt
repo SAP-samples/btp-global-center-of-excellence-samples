@@ -1,0 +1,4 @@
+Flask
+generative-ai-hub-sdk[all]
+langgraph
+bs4

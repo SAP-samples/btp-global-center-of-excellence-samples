@@ -1,0 +1,5 @@
+---
+applications:
+- name: btpassistant
+  memory: 256M
+  command: streamlit run btpassistant.py --server.port ${PORT}
