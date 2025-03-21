@@ -1,0 +1,15 @@
+---
+applications:
+- name: timesheet-management-agent
+  memory: 1G
+  instances: 1
+  buildpacks:
+    - python_buildpack
+  command: streamlit run frontend.py --server.address 0.0.0.0 --server.port $PORT
+  env: 
+    AICORE_AUTH_URL: <YOUR AICORE_AUTH_URL>
+    AICORE_BASE_URL: <YOUR AICORE_BASE_URL>
+    AICORE_CLIENT_ID: <YOUR AICORE_CLIENT_ID>
+    AICORE_CLIENT_SECRET: <YOUR AICORE_CLIENT_SECRET>
+    AICORE_RESOURCE_GROUP: default
+    PAYROLL_API_KEY: <YOUR PAYROLL API KEY>
