@@ -1,0 +1,11 @@
+streamlit
+generative-ai-hub-sdk[all]
+langgraph
+langchain
+playwright
+beautifulsoup4
+hana-ml
+duckduckgo-search
+requests
+url-normalize
+python-dotenv
