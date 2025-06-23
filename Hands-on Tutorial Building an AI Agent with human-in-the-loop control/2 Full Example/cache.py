@@ -6,7 +6,7 @@ import streamlit as st
 def init_resources():
     from agent import init_agent
     if 'init' not in st.session_state:
-        st.session_state.chat_history = [(uuid.uuid1(), 'assistant', 'Hi, I am an AI Agent helping you with your timesheet management.')]
+        st.session_state.chat_history = [(uuid.uuid1(), 'assistant', 'Hi, I am an AI Agent assisting with keeping track of your work time.')]
         st.session_state.thread_id = uuid.uuid1()
         st.session_state.light_llm = init_llm('gpt-4o-mini', temperature=0)
         st.session_state.agent = init_agent()

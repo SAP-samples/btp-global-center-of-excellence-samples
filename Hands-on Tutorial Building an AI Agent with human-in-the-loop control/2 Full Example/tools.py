@@ -8,6 +8,7 @@ from langchain_core.tools import tool
 
 
 # os.environ["PAYROLL_API_KEY"] = "<YOUR API KEY>"
+os.environ["PAYROLL_API_KEY"] = "OhzaSGhValDkCokwR9ALTyHrv0gZ1lMJ"
 API_KEY = os.environ.get("PAYROLL_API_KEY")
 
 base_url = 'https://sandbox.api.sap.com/successfactors/odata/v2/'
@@ -65,7 +66,7 @@ def post_records(data: ExternalTimeData, confirmation_message : str):
                 startDate: YYYY-mm-dd
                 startTime/endTime: ISO 8601 e.g. 'PT09H00M00S'/'PT18H30M00S' (9:00-18:30). The time frame must only include work time.
             confirmation_message: Confirmation message of the action containing a detailed summary.
-            Include the specific date and time e.g. Confirm work time from 11:00 to 14:00 on June 15th 2025.
+            Include the specific date and time e.g. Confirm work time from 11:00 to 14:00 on Thursday, June 12th 2025.
         """
 
     payload = dict(data)
@@ -88,8 +89,19 @@ def post_records(data: ExternalTimeData, confirmation_message : str):
     else:
         return  f'Error creating entity ({data}):  {response.status_code}: {response.content}'
 
+@tool
+def retrieve_weekday(date_str: str) -> str:
+    """Retrieves the weekday of a given date.
+        Args:
+            date_str: A string in the format YYYY-MM-DDD
+        Returns:
+            The weekday of the provided date.
+    """
+    date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    weekday = date.strftime("%A")
+    return f"{date_str} was a {weekday}."
 
 @tool
 def get_today():
-    """Returns todays date."""
+    """Retrieves today's date."""
     return date.today()

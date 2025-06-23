@@ -2,11 +2,16 @@
 import asyncio
 import json
 from time import time
+import base64
+
+import streamlit
+from langchain_core.messages import HumanMessage
 from langgraph.types import Command
 from streamlit import session_state
 from cache import *
+from streamlit_extras.bottom_container import bottom
 
-st.set_page_config(page_title='Hands-On Timesheet Management Agent')
+st.set_page_config(page_title='AI Agent for time recording')
 
 light_model, agent = init_resources()
 
@@ -56,6 +61,8 @@ def display_chat_item(item):
             st.write(item_content['explanation'])
     elif item_type == 'review':
         display_review_container(item)
+    elif item_type == 'audio':
+        st.audio(item_content, format="audio/wav")
     else:
         with st.chat_message(item_type): #avatar=f'{item_type}.png'
             st.markdown(item_content)
@@ -120,10 +127,14 @@ async def process_stream(updates):
             answer = update['__interrupt__'][0].value['action']
         elif 'agent' in update:
             message = update['agent']['messages'][-1]
-            print(message.pretty_repr())
             await queue.put(message)
             await asyncio.sleep(0)
             answer = message.content
+        elif 'tools' in update:
+            try:
+                update['tools']['messages'][-1].pretty_print()
+            except IndexError:
+                print('Tools message is empty.')
 
     await queue.put(None)
     await gen_status_task
@@ -146,8 +157,13 @@ def generate_response(user_input):
 
 
 
-def handle_input(user_input):
-    if not user_input and not 'command' in st.session_state:
+def handle_input(user_input, audio_input):
+    #no user input
+    if not user_input and not audio_input and not 'command' in st.session_state:
+        return
+
+    #interrupt triggered but no user review supplied
+    if st.session_state.interrupted and not 'command' in st.session_state:
         return
 
     #interrupted
@@ -156,9 +172,26 @@ def handle_input(user_input):
         del st.session_state.command
         session_state.interrupted = False
     #not interrupted
-    else:
+    elif user_input:
         append_chat('user', user_input)
         user_input = {'messages': [('user', user_input)]}
+    else:
+        append_chat('audio', audio_input)
+        content = audio_input.read()
+        audio_data = base64.b64encode(content).decode("utf-8")
+        #Gemini Flash 2.0
+        message = HumanMessage(
+            content=[
+                {"type": "text", "text": "Fulfill the request described in the audio."},
+                {
+                    "type": "media",
+                    "data": audio_data,
+                    "mime_type": "audio/wav"
+        },
+            ]
+        )
+        user_input =  {"messages": [message]}
+
 
     answer = generate_response(user_input)
 
@@ -167,13 +200,34 @@ def handle_input(user_input):
     else:
         append_chat('assistant', answer)
 
+hide_streamlit_style = """
+                <style>
+                div[data-testid="stToolbar"] {
+                visibility: hidden;
+                }
+                div[data-testid="stStatusWidget"] {
+                visibility: hidden;
+                }
+                </style>
+                """
 
 def render_page():
-    user_input = st.chat_input('Write your question:')
-    st.title('Timesheet Management Agent')
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+    st.title('AI Agent for time recording')
     for message in st.session_state.chat_history:
         display_chat_item(message)
-    handle_input(user_input)
+
+    with bottom():
+        st.markdown("---")
+        input_format = st.query_params.get("input", "")
+        if input_format == "audio":
+            text_input = None
+            audio_input = st.audio_input("Talk to the agent.")
+        else:
+            text_input = st.chat_input('Enter your request.')
+            audio_input = None
+
+    handle_input(text_input, audio_input)
 
 
 render_page()
