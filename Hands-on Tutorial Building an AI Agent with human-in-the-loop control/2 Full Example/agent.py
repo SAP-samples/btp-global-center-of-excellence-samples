@@ -12,29 +12,33 @@ from langgraph.prebuilt import ToolNode
 from langgraph.prebuilt.chat_agent_executor import AgentState
 from langgraph.types import interrupt, Command, Send
 from pydantic import Field, BaseModel
+from datetime import date
+from tools import get_records, post_records, get_today, retrieve_weekday
 
-from tools import get_records, post_records, get_today
+today = date.today()
 
-system_prompt ="""
+system_prompt =f"""
 Role and Objective:
-
-  - You are a helpful AI Agent dedicated to assisting users with their timesheet management.
+  - You are a helpful AI Agent dedicated to assisting users with time recording.
   - Your primary tasks include retrieving and posting timesheet data based on user requests.
 
 Responsibilities:
-
   - Logging Work Time: Only log actual work time. Do not include any breaks.
     - User: Today I worked from 6 to 16 with a half hour break at 12. -> You should: Log time from 6 to 12 and from 12:30 to 16.
   - Data Handling: When posting records, execute as many post_records calls in parallel as possible using the provided information.
-  - Automatic Confirmation: When a post_records call is made, the user is automatically asked for confirmation over a GUI; do not prompt for confirmation.
+  - Confirmation: Never ask the user for confirmation.  
+  - When calling a tool always describe the step you are taking in the message containing the tool call.
 
 Interaction Guidelines:
-
   - The user's most recent input always takes precedence over older input.
+  - Do not ask the user for confirmation.
   - Language Consistency: Always respond in the same language as the user.
-  - Clarity and Accuracy:
-    - If any part of the user’s request is ambiguous (for example, missing dates or unclear work times), ask clarifying questions rather than making assumptions.
-    - Ensure all necessary details are provided before proceeding with any action.
+  - If the user’s request is too ambiguous (for example, very unclear work times), ask clarifying questions rather than making farfetched assumptions.
+  - Use your tools to retrieve the exact dates.
+  - If the user mentions a specific week and weekday use your tools to infer the date. Never ask the user for the date in this case.
+    
+Contextual Information:
+  - Today is {today.strftime("%B %d, %Y")}.
 """
 
 prompt = ChatPromptTemplate.from_messages([
@@ -45,6 +49,12 @@ prompt = ChatPromptTemplate.from_messages([
 need_review = ['post_records']
 
 def agent(state: AgentState, config: RunnableConfig):
+
+    #empty message fix
+    last_message = state['messages'][-1]
+    if last_message.content ==  '' and isinstance(last_message, AIMessage):
+        state['messages'][-1].content = "The user seems to have approved no tool call."
+    # print("MESSAGES: " + str(state['messages']))
     tmp = prompt.invoke({'msg': state['messages']})
 
     response = cast(AIMessage, agent_llm.invoke(tmp, config))
@@ -89,7 +99,7 @@ def human_review(state: AgentState):
                                           f"To this message: "
                                           f"<{row['args']['confirmation_message']}> "
                                           f"the user responded: "
-                                          f"<{user_changes}>"
+                                          f"<{user_changes}>. "
                                           f"Incorporate this request and call the tool again. "
                                           f"Do not call the tool with the same values.",
                                           tool_call_id=row['id'])
@@ -97,8 +107,9 @@ def human_review(state: AgentState):
 
         tool_messages = denied_messages + to_change_messages
 
+        msg = [not_approved_message] + tool_messages + [approved_message]
         return Command(update={
-            "messages": [not_approved_message] + tool_messages + [approved_message]}, goto='tools')
+            "messages": msg}, goto='tools')
     else:
         return Send(node='tools', arg=state)
 
@@ -111,8 +122,8 @@ def should_continue(state: AgentState) -> Literal["tools", "__end__"]:
     return "__end__"
 
 
-tools = [get_records, post_records, get_today]
-llm = init_llm('gpt-4o', max_tokens=512, temperature=0)
+tools = [get_records, post_records, get_today, retrieve_weekday]
+llm = init_llm('gemini-2.0-flash', max_tokens=4192, temperature=0)
 
 verification_llm = llm.bind_tools([UserAffirmation])
 agent_llm = llm.bind_tools(tools)
