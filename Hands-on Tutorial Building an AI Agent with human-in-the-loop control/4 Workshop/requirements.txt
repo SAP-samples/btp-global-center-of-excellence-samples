@@ -1,0 +1,6 @@
+langchain-google-community
+langchain-google-vertexai
+langchain-mcp-adapters
+langgraph
+sap-ai-sdk-gen
+streamlit-extras
