@@ -11,10 +11,10 @@ context SAP {
 context LOG {
     @cds.persistence.exists
     entity TABLE {
-        TIME     : DateTime;
-        EXECUTER : String(255);
-        SUBJECT  : String(255);
-        CLIENT   : String(3);
-        RESULT   : String(1000);
+        key TIME     : DateTime;
+        key EXECUTER : String(255);
+            SUBJECT  : String(255);
+            CLIENT   : String(3);
+            RESULT   : String(1000);
     };
 };

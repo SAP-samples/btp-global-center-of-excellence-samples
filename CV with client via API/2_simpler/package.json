@@ -6,15 +6,14 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/cds": "^7",
-    "express": "^4",
-    "@sap/cds-hana": "^2",
-    "@sap/xssec": "^3",
+    "@sap/cds": "^9",
+    "@cap-js/hana": "^2",
+    "@sap/xssec": "^4",
     "passport": "^0"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^7"
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": "^9"
   },
   "scripts": {
     "start": "cds-serve"
